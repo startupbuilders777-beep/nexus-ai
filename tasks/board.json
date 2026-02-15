@@ -1,0 +1,162 @@
+{
+  "status": "in_progress",
+  "tasks": [
+    {
+      "id": "NEXUS-001",
+      "title": "Project setup (Next.js + TypeScript + Tailwind)",
+      "description": "Initialize Next.js project with TypeScript, Tailwind CSS, and configure build tools",
+      "status": "completed",
+      "priority": "high",
+      "assignee": "Agent-NexusAI",
+      "dependencies": [],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-002",
+      "title": "Database schema (Prisma + PostgreSQL)",
+      "description": "Define Prisma schema with all models: User, DataSource, Document, Chunk, Conversation, Message, ApiKey, UsageRecord, Job, Webhook",
+      "status": "completed",
+      "priority": "high",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-001"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-003",
+      "title": "Authentication (NextAuth)",
+      "description": "Implement NextAuth with credentials provider, JWT strategy, and Prisma adapter",
+      "status": "completed",
+      "priority": "high",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-002"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-004",
+      "title": "Dashboard layout",
+      "description": "Create dashboard layout with sidebar, header, navigation, and user menu",
+      "status": "completed",
+      "priority": "high",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-001", "NEXUS-003"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-005",
+      "title": "Data sources page",
+      "description": "Build data sources management page with connect, sync, and disconnect functionality",
+      "status": "completed",
+      "priority": "high",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-004"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-006",
+      "title": "File upload",
+      "description": "Implement file upload with drag-and-drop, progress tracking, and supported file type validation",
+      "status": "completed",
+      "priority": "high",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-005"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-007",
+      "title": "File processing API",
+      "description": "Create API endpoint for processing uploaded files: text extraction, chunking, metadata extraction",
+      "status": "completed",
+      "priority": "high",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-006"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-008",
+      "title": "Embeddings generation",
+      "description": "Build embeddings generation API using OpenAI, Cohere, or Anthropic embedding models",
+      "status": "completed",
+      "priority": "high",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-007"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-009",
+      "title": "Vector storage integration",
+      "description": "Integrate vector storage (pgvector, Pinecone, Weaviate) for storing and querying embeddings",
+      "status": "completed",
+      "priority": "high",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-008"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-010",
+      "title": "RAG API endpoint",
+      "description": "Create RAG API endpoint that retrieves relevant context and generates AI responses",
+      "status": "completed",
+      "priority": "high",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-009"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-011",
+      "title": "AI model selector",
+      "description": "Add model selector UI for choosing between GPT-4, Claude, Gemini, and other models",
+      "status": "completed",
+      "priority": "medium",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-010"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-012",
+      "title": "Chat interface",
+      "description": "Build real-time chat interface with streaming responses, citations, and source display",
+      "status": "completed",
+      "priority": "high",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-010", "NEXUS-011"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-013",
+      "title": "Google Drive connector",
+      "description": "Implement Google Drive connector for importing documents from Google Drive",
+      "status": "pending",
+      "priority": "medium",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-005"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-014",
+      "title": "Notion connector",
+      "description": "Implement Notion connector for importing pages and databases",
+      "status": "pending",
+      "priority": "medium",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-005"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    },
+    {
+      "id": "NEXUS-015",
+      "title": "Database connectors",
+      "description": "Implement PostgreSQL and MongoDB connectors for direct database ingestion",
+      "status": "pending",
+      "priority": "medium",
+      "assignee": "Agent-NexusAI",
+      "dependencies": ["NEXUS-005"],
+      "createdAt": "2026-02-13T21:05:00Z"
+    }
+  ],
+  "statistics": {
+    "total": 15,
+    "completed": 12,
+    "inProgress": 0,
+    "pending": 3
+  },
+  "updatedAt": "2026-02-13T21:15:00Z"
+}
