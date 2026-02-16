@@ -60,10 +60,19 @@ export async function POST(request: NextRequest) {
     let context = "";
     let citations: { chunkId: string; documentId: string; score: number }[] = [];
 
-    // If RAG is enabled, search for relevant chunks
+    // If RAG is enabled, search for relevant chunks using semantic search
     if (useRag) {
-      // For demo purposes, we'll use a simple text search
-      // In production, you'd use vector similarity search with embeddings
+      const openai = getOpenAIClient();
+      
+      // Generate embedding for the query
+      const embeddingResponse = await openai.embeddings.create({
+        model: "text-embedding-3-small",
+        input: message,
+      });
+      
+      const queryEmbedding = embeddingResponse.data[0].embedding;
+      
+      // Get chunks with embeddings and calculate similarity
       const chunks = await prisma.chunk.findMany({
         where: {
           document: {
@@ -74,24 +83,33 @@ export async function POST(request: NextRequest) {
         include: {
           document: true,
         },
-        take: 5,
+        take: 20, // Get more chunks to filter by similarity
       });
-
-      // For demo, we'll just get recent chunks as context
-      // In production, you'd compute embeddings and do similarity search
-      const recentDocuments = await prisma.document.findMany({
-        where: {
-          userId: session.user.id,
-          status: "COMPLETED",
-        },
-        orderBy: { updatedAt: "desc" },
-        take: 3,
-      });
-
-      context = recentDocuments
-        .map((doc) => doc.content?.slice(0, 1000))
-        .filter(Boolean)
+      
+      // Calculate cosine similarity and sort
+      const scoredChunks = chunks
+        .map((chunk) => {
+          const storedEmbedding = (chunk.metadata as any)?.embeddingVector;
+          const score = storedEmbedding 
+            ? cosineSimilarity(queryEmbedding, storedEmbedding) 
+            : 0;
+          return { ...chunk, score };
+        })
+        .filter((chunk) => chunk.score > 0.5) // Threshold for relevance
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5); // Top 5 chunks
+      
+      // Build context from relevant chunks
+      context = scoredChunks
+        .map((chunk) => `[${chunk.document.name}]\n${chunk.content}`)
         .join("\n\n---\n\n");
+      
+      // Set citations
+      citations = scoredChunks.map((chunk) => ({
+        chunkId: chunk.id,
+        documentId: chunk.documentId,
+        score: chunk.score,
+      }));
     }
 
     // Build the prompt
@@ -212,4 +230,17 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+// Cosine similarity for vector search
+function cosineSimilarity(a: number[], b: number[]): number {
+  if (a.length !== b.length) return 0;
+  
+  const dotProduct = a.reduce((sum, val, i) => sum + val * b[i], 0);
+  const magnitudeA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0));
+  const magnitudeB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0));
+  
+  if (magnitudeA === 0 || magnitudeB === 0) return 0;
+  
+  return dotProduct / (magnitudeA * magnitudeB);
 }
