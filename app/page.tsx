@@ -191,7 +191,7 @@ export default function HomePage() {
                 <span className="text-xl font-bold">NexusAI</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Put your data in every AI's brain.
+                Put your data in every AI&apos;s brain.
               </p>
             </div>
             <div>
