@@ -36,6 +36,7 @@ model User {
   apiKeys       ApiKey[]
   usageRecords  UsageRecord[]
   webhooks      Webhook[]
+  userAgents    UserAgent[]
 }
 
 enum UserRole {
@@ -465,8 +466,60 @@ model Webhook {
 }
 
 // ============================================
-// JOBS & PROCESSING QUEUE
+// USER AGENTS (Telegram/Discord bots)
 // ============================================
+
+model UserAgent {
+  id            String          @id @default(cuid())
+  platform      MessagingPlatform
+  platformUserId String         // Telegram user ID or Discord user ID
+  platformChatId String?        // Discord channel ID or Telegram chat ID
+  
+  // Bot configuration
+  botToken      String?         // Bot token for the platform
+  isActive      Boolean         @default(true)
+  
+  // Settings
+  agentName     String?         // Name of the agent
+  systemPrompt  String?         @db.Text
+  
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  messageLogs   MessageLog[]
+  
+  @@unique([platform, platformUserId])
+  @@index([userId])
+  @@index([platform])
+}
+
+model MessageLog {
+  id            String          @id @default(cuid())
+  platform      MessagingPlatform
+  messageId     String?         // Platform message ID
+  content       String          @db.Text
+  intent        String?         // Detected intent
+  confidence    Float?
+  
+  // Metadata
+  metadata      Json?
+  
+  createdAt     DateTime        @default(now())
+  
+  userAgentId   String
+  userAgent     UserAgent       @relation(fields: [userAgentId], references: [id], onDelete: Cascade)
+  
+  @@index([userAgentId])
+  @@index([createdAt])
+}
+
+enum MessagingPlatform {
+  TELEGRAM
+  DISCORD
+}
 
 model Job {
   id            String      @id @default(cuid())
