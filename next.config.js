@@ -8,10 +8,6 @@ const nextConfig = {
       },
     ],
   },
-  // Skip static generation for client components
-  experimental: {
-    serverComponentsExternalPackages: ["lucide-react"],
-  },
 };
 
 module.exports = nextConfig;
